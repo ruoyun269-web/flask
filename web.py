@@ -11,6 +11,7 @@ def index():
     link += "<a href =/me>關於我</a><hr>"
     link += "<a href =/welcome?suga=鍾若筠&d=靜宜資管&c=>Get傳值</a><hr>"
     link += "<a href =/account>網頁表單傳值</a><br>"
+    link += "<a href=/calc>次方與根號計算 (網頁表單傳值)</a><br>"
     return link
 
 @app.route("/mis")
@@ -43,6 +44,25 @@ def account():
     else:
         return render_template("account.html")
 
+@app.route("/calc", methods=["GET", "POST"])
+def calculate():
+    if request.method == "POST":
+        # 這裡處理表單傳過來的數值
+        x = float(request.form.get("x", 0))
+        y = float(request.form.get("y", 0))
+        op = request.form.get("op")
+        
+        if op == "pow":
+            res = x ** y
+            msg = f"{x} 的 {y} 次方為 {res}"
+        else:
+            res = x ** (1/y)
+            msg = f"{x} 的 {y} 次方根為 {res}"
+            
+        return f"<h1>計算結果</h1><p>{msg}</p><a href='/calc'>重新計算</a>"
+    
+    # GET 請求時，顯示計算機畫面
+    return render_template("calculator.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
